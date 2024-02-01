@@ -1,4 +1,4 @@
-import { APIGatewayProxyResult, Context } from 'aws-lambda'
+import { APIGatewayProxyEventV2, APIGatewayProxyResult, Context } from 'aws-lambda'
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import {
   DynamoDBDocumentClient,
@@ -7,6 +7,7 @@ import {
   DeleteCommand,
   ScanCommand,
 } from '@aws-sdk/lib-dynamodb'
+import { v1 as uuid } from 'uuid'
 
 const client = new DynamoDBClient({})
 
@@ -14,7 +15,7 @@ const dynamo = DynamoDBDocumentClient.from(client)
 
 const tableName = process.env.TABLE_NAME || ""
 
-export async function handler(event: any, context: Context) {
+export async function handler(event: APIGatewayProxyEventV2, context: Context) {
   console.log("request:", JSON.stringify(event, undefined, 2))
 
   const result: APIGatewayProxyResult = {
@@ -29,23 +30,23 @@ export async function handler(event: any, context: Context) {
 
   try {
     switch (event.routeKey) {
+      case "GET /configurations/{id}": {
+        const output = await dynamo.send(
+          new GetCommand({
+            TableName: tableName,
+            Key: {
+              id: event.pathParameters?.id,
+            },
+          })
+        )
+        responseBody = output.Item
+        break
+      }
       case "GET /configurations": {
-        if (event.pathParameters && event.pathParameters.id) {
-          const output = await dynamo.send(
-            new GetCommand({
-              TableName: tableName,
-              Key: {
-                id: event.pathParameters?.id,
-              },
-            })
-          )
-          responseBody = output.Item
-        } else {
-          const output = await dynamo.send(
-            new ScanCommand({ TableName: tableName })
-          )
-          responseBody = output.Items
-        }
+        const output = await dynamo.send(
+          new ScanCommand({ TableName: tableName })
+        )
+        responseBody = output.Items
         break
       }
       case "PUT /configurations": {
@@ -54,7 +55,7 @@ export async function handler(event: any, context: Context) {
           new PutCommand({
             TableName: tableName,
             Item: {
-              id: requestBody.id,
+              id: uuid(),
               fillColor: requestBody.fillColor,
               strokeColor: requestBody.strokeColor,
               width: requestBody.width,

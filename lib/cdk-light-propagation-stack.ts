@@ -17,7 +17,7 @@ export class CdkLightPropagationStack extends cdk.Stack {
     // Create the DynamoDB table
     const table = new cdk.aws_dynamodb.Table(this, "CdkLightPropagationConfigurationsTable", {
       tableName: "CdkLightPropagationConfigurations",
-      partitionKey: { name: "id", type: AttributeType.NUMBER }
+      partitionKey: { name: "id", type: AttributeType.STRING }
     })
 
     // Create the Lambda function
@@ -50,7 +50,7 @@ export class CdkLightPropagationStack extends cdk.Stack {
         allowHeaders: ["*"],
         allowMethods: [
           CorsHttpMethod.GET,
-          CorsHttpMethod.POST,
+          CorsHttpMethod.PUT,
           CorsHttpMethod.DELETE,
         ],
         allowCredentials: false,
@@ -64,7 +64,7 @@ export class CdkLightPropagationStack extends cdk.Stack {
       path: "/configurations",
       methods: [
         HttpMethod.GET,
-        HttpMethod.POST,
+        HttpMethod.PUT,
       ],
       integration: mainIntegration,
     })
@@ -73,7 +73,6 @@ export class CdkLightPropagationStack extends cdk.Stack {
       path: '/configurations/{id}',
       methods: [
         HttpMethod.GET,
-        HttpMethod.PUT,
         HttpMethod.DELETE,
       ],
       integration: mainIntegration,
