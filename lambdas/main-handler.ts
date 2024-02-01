@@ -51,11 +51,12 @@ export async function handler(event: APIGatewayProxyEventV2, context: Context) {
       }
       case "PUT /configurations": {
         const requestBody = JSON.parse(event.body ?? "{}")
+        const itemId = uuid()
         const output = await dynamo.send(
           new PutCommand({
             TableName: tableName,
             Item: {
-              id: uuid(),
+              id: itemId,
               fillColor: requestBody.fillColor,
               strokeColor: requestBody.strokeColor,
               width: requestBody.width,
@@ -65,7 +66,7 @@ export async function handler(event: APIGatewayProxyEventV2, context: Context) {
             },
           })
         )
-        responseBody = `Put item ${JSON.stringify(requestBody.id)}`
+        responseBody = `Put item with id: ${itemId}`
         result.statusCode = 201
         break
       }
