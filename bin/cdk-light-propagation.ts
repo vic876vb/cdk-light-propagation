@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import 'source-map-support/register';
-import * as cdk from 'aws-cdk-lib';
-import { CdkLightPropagationStack } from '../lib/cdk-light-propagation-stack';
+import 'source-map-support/register'
+import * as cdk from 'aws-cdk-lib'
+import { CdkLightPropagationStack } from '../lib/cdk-light-propagation-stack'
 
 const app = new cdk.App();
 new CdkLightPropagationStack(app, 'CdkLightPropagationStack', {
@@ -18,4 +18,5 @@ new CdkLightPropagationStack(app, 'CdkLightPropagationStack', {
   // env: { account: '123456789012', region: 'us-east-1' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
-});
+})
+app.synth()

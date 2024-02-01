@@ -1,0 +1,425 @@
+Resources:
+  CdkLightPropagationConfigurationsTable03DE7442:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: "N"
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TableName: CdkLightPropagationConfigurations
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsTable/Resource
+  CdkLightPropagationMainHandlerFunctionServiceRole29988F48:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationMainHandlerFunction/ServiceRole/Resource
+  CdkLightPropagationMainHandlerFunctionServiceRoleDefaultPolicyE3464480:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:BatchWriteItem
+              - dynamodb:ConditionCheckItem
+              - dynamodb:DeleteItem
+              - dynamodb:DescribeTable
+              - dynamodb:GetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:PutItem
+              - dynamodb:Query
+              - dynamodb:Scan
+              - dynamodb:UpdateItem
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - CdkLightPropagationConfigurationsTable03DE7442
+                  - Arn
+              - Ref: AWS::NoValue
+        Version: "2012-10-17"
+      PolicyName: CdkLightPropagationMainHandlerFunctionServiceRoleDefaultPolicyE3464480
+      Roles:
+        - Ref: CdkLightPropagationMainHandlerFunctionServiceRole29988F48
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationMainHandlerFunction/ServiceRole/DefaultPolicy/Resource
+  CdkLightPropagationMainHandlerFunctionE2F03E9F:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: ef7a2b41b3152d5f72b4124e0b681f05cbaa1646ef1cc5e859bb730d6429425e.zip
+      Environment:
+        Variables:
+          PRIMARY_KEY: id
+          TABLE_NAME:
+            Ref: CdkLightPropagationConfigurationsTable03DE7442
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - CdkLightPropagationMainHandlerFunctionServiceRole29988F48
+          - Arn
+      Runtime: nodejs20.x
+    DependsOn:
+      - CdkLightPropagationMainHandlerFunctionServiceRoleDefaultPolicyE3464480
+      - CdkLightPropagationMainHandlerFunctionServiceRole29988F48
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationMainHandlerFunction/Resource
+      aws:asset:path: /Users/vic876vb/dev/git/cdk-light-propagation/cdk.out/asset.ef7a2b41b3152d5f72b4124e0b681f05cbaa1646ef1cc5e859bb730d6429425e
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  CdkLightPropagationConfigurationsApiCF275361:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      CorsConfiguration:
+        AllowCredentials: false
+        AllowHeaders:
+          - "*"
+        AllowMethods:
+          - GET
+          - POST
+          - DELETE
+        AllowOrigins:
+          - "*"
+        ExposeHeaders:
+          - "*"
+        MaxAge: 86400
+      Description: HTTP API Gateway
+      Name: Configurations HTTP Service
+      ProtocolType: HTTP
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/Resource
+  CdkLightPropagationConfigurationsApiDefaultStage49DAD6EE:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId:
+        Ref: CdkLightPropagationConfigurationsApiCF275361
+      AutoDeploy: true
+      StageName: $default
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/DefaultStage/Resource
+  CdkLightPropagationConfigurationsApiGETconfigurationsCdkLightPropagationMainIntegrationDA0C61E0:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId:
+        Ref: CdkLightPropagationConfigurationsApiCF275361
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
+        Fn::GetAtt:
+          - CdkLightPropagationMainHandlerFunctionE2F03E9F
+          - Arn
+      PayloadFormatVersion: "2.0"
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/GET--configurations/CdkLightPropagationMainIntegration/Resource
+  CdkLightPropagationConfigurationsApiGETconfigurationsCdkLightPropagationMainIntegrationPermissionD7B5A1DB:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - CdkLightPropagationMainHandlerFunctionE2F03E9F
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: CdkLightPropagationConfigurationsApiCF275361
+            - /*/*/configurations
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/GET--configurations/CdkLightPropagationMainIntegration-Permission
+  CdkLightPropagationConfigurationsApiGETconfigurationsA81FF865:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId:
+        Ref: CdkLightPropagationConfigurationsApiCF275361
+      AuthorizationType: NONE
+      RouteKey: GET /configurations
+      Target:
+        Fn::Join:
+          - ""
+          - - integrations/
+            - Ref: CdkLightPropagationConfigurationsApiGETconfigurationsCdkLightPropagationMainIntegrationDA0C61E0
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/GET--configurations/Resource
+  CdkLightPropagationConfigurationsApiPOSTconfigurationsCdkLightPropagationMainIntegrationPermissionA075B978:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - CdkLightPropagationMainHandlerFunctionE2F03E9F
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: CdkLightPropagationConfigurationsApiCF275361
+            - /*/*/configurations
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/POST--configurations/CdkLightPropagationMainIntegration-Permission
+  CdkLightPropagationConfigurationsApiPOSTconfigurations9338CE3D:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId:
+        Ref: CdkLightPropagationConfigurationsApiCF275361
+      AuthorizationType: NONE
+      RouteKey: POST /configurations
+      Target:
+        Fn::Join:
+          - ""
+          - - integrations/
+            - Ref: CdkLightPropagationConfigurationsApiGETconfigurationsCdkLightPropagationMainIntegrationDA0C61E0
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/POST--configurations/Resource
+  CdkLightPropagationConfigurationsApiGETconfigurationsidCdkLightPropagationMainIntegrationPermission90526079:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - CdkLightPropagationMainHandlerFunctionE2F03E9F
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: CdkLightPropagationConfigurationsApiCF275361
+            - /*/*/configurations/{id}
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/GET--configurations--{id}/CdkLightPropagationMainIntegration-Permission
+  CdkLightPropagationConfigurationsApiGETconfigurationsid386C11A4:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId:
+        Ref: CdkLightPropagationConfigurationsApiCF275361
+      AuthorizationType: NONE
+      RouteKey: GET /configurations/{id}
+      Target:
+        Fn::Join:
+          - ""
+          - - integrations/
+            - Ref: CdkLightPropagationConfigurationsApiGETconfigurationsCdkLightPropagationMainIntegrationDA0C61E0
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/GET--configurations--{id}/Resource
+  CdkLightPropagationConfigurationsApiPUTconfigurationsidCdkLightPropagationMainIntegrationPermission34315503:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - CdkLightPropagationMainHandlerFunctionE2F03E9F
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: CdkLightPropagationConfigurationsApiCF275361
+            - /*/*/configurations/{id}
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/PUT--configurations--{id}/CdkLightPropagationMainIntegration-Permission
+  CdkLightPropagationConfigurationsApiPUTconfigurationsidB900E2BF:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId:
+        Ref: CdkLightPropagationConfigurationsApiCF275361
+      AuthorizationType: NONE
+      RouteKey: PUT /configurations/{id}
+      Target:
+        Fn::Join:
+          - ""
+          - - integrations/
+            - Ref: CdkLightPropagationConfigurationsApiGETconfigurationsCdkLightPropagationMainIntegrationDA0C61E0
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/PUT--configurations--{id}/Resource
+  CdkLightPropagationConfigurationsApiDELETEconfigurationsidCdkLightPropagationMainIntegrationPermission4A9D0147:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - CdkLightPropagationMainHandlerFunctionE2F03E9F
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: CdkLightPropagationConfigurationsApiCF275361
+            - /*/*/configurations/{id}
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/DELETE--configurations--{id}/CdkLightPropagationMainIntegration-Permission
+  CdkLightPropagationConfigurationsApiDELETEconfigurationsidF61AC3B6:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId:
+        Ref: CdkLightPropagationConfigurationsApiCF275361
+      AuthorizationType: NONE
+      RouteKey: DELETE /configurations/{id}
+      Target:
+        Fn::Join:
+          - ""
+          - - integrations/
+            - Ref: CdkLightPropagationConfigurationsApiGETconfigurationsCdkLightPropagationMainIntegrationDA0C61E0
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/DELETE--configurations--{id}/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/11Qy07DMBD8Fu7OQlIOXNtKqFwQCtyjjb1Em4cdZZ1WUZR/x3YoB04zs54ZrbeAvHiGpwe8SaZNl/Vcw/rpUXcqjKrVLBYHZ8LwC+ue1PnbJrKpHofaYGWdoVbgPcHrbLVnZxXjAGvp9kDCD9ezXqLc2abkUKEIeYFjhKDhNOuO/AmFfuthDYG/1himaWCRoDaFIzfo6YbLtYD14v14HDmaIkQZ/tGkDXYSR6Wb/c7erKdmwnvxP5l826ZKEjdPmlTaMfawbZLh/hD42VnDPu0UzwGtPF7zF8gP4bCtMGfTbD0PBOWOP2hF/B91AQAA
+    Metadata:
+      aws:cdk:path: CdkLightPropagationStack/CDKMetadata/Default
+    Condition: CDKMetadataAvailable
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - af-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - il-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+Rules:
+  CheckBootstrapVersion:
+    Assertions:
+      - Assert:
+          Fn::Not:
+            - Fn::Contains:
+                - - "1"
+                  - "2"
+                  - "3"
+                  - "4"
+                  - "5"
+                - Ref: BootstrapVersion
+        AssertDescription: CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.
+
