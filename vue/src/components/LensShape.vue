@@ -1,52 +1,40 @@
 <template>
-  <LensPath
+  <PathElement
+    id="lens"
+    title="Lens"
     :path="path"
-    :fill-color="fillColor"
-    :stroke-color="strokeColor"
+    stroke="#7393B3"
+    stroke-width="2"
+    fill="none"
   />
 </template>
 
 <script setup lang="ts">
-  import { storeToRefs, MutationType } from 'pinia'
-  import useControlsStore from '@/stores/useControlsStore'
-  import LensPath from './LensPath.vue'
+  import { storeToRefs } from 'pinia'
+  import useControlsStore from '@/stores/controls.store'
   import { computed } from 'vue'
+  import PathElement from './PathElement.vue'
 
   const store = useControlsStore()
   const {
-    fillColor,
-    strokeColor,
     offsetX,
     offsetY,
     thickness,
     height,
     frontRadius,
     backRadius,
+    frontSurface,
+    backSurface,
   } = storeToRefs(store)
 
-  
-
-  // store.$subscribe((mutation, state) => {
-  //   if (mutation.type === MutationType.patchObject) {
-  //     Object.keys(storeToRefs(store))
-  //     // mutation.payload[]
-  //   }
-  //   console.log(mutation, state)
-    
-  
-  //   console.log(path)
-  // })
-
   const path = computed(() => {
-    const transformations = [
+    return [
       `M ${offsetX.value} ${offsetY.value}`,
-      `a ${frontRadius.value} ${frontRadius.value} 0 0 0 0 ${height.value}`,
+      `a ${frontRadius.value} ${frontRadius.value} 0 0 ${frontSurface.value === "convex" ? 0 : 1} 0 ${height.value}`,
       `l ${thickness.value} 0`,
-      `a ${backRadius.value} ${backRadius.value} 0 0 0 0 -${height.value}`,
+      `a ${backRadius.value} ${backRadius.value} 0 0 ${backSurface.value === "convex" ? 0 : 1} 0 -${height.value}`,
       "Z",
-    ]
-    console.log(transformations.join(" "))
-    return transformations.join(" ")
+    ].join(" ")
   })
 
 </script>
