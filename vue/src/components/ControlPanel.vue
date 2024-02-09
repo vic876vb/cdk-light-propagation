@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-xl h-max px-8 py-4 my-auto border-2 border-current">
+  <div class="h-max lg:mt-8 px-8 py-4 mt-4 mb-auto border-2 border-current rounded-lg">
     <!-- TODO: pagesheet in mobile -->
     <!-- <hr class="dark:bg-gray-200 w-10 h-2 my-1 bg-gray-700 border-0" /> -->
     <div class="md:flex-row flex flex-col justify-between gap-4">

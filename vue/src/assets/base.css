@@ -14,10 +14,6 @@ html {
 	scroll-padding-block: 2.75rem;
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 body {
   /* min-height: 100vh; */
   color: var(--color-text);
@@ -54,4 +50,5 @@ body {
 header {
   color: var(--color-text);
   background: var(--color-background);
+  z-index: 1000;
 }

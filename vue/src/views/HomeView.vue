@@ -1,14 +1,14 @@
 <template>
-  <div class="md:columns-2 md:flex-nowrap container flex flex-wrap gap-4 mx-auto">
-    <main class="md:basis-3/4 flex flex-col flex-auto">
+  <div class="md:columns-2 md:flex-nowrap container xl:max-w-[1200px] flex flex-wrap gap-4 mx-auto">
+    <main class="md:basis-2/3 mx-4 md:my-4 lg:my-10 gap-y-8 flex-auto flex flex-col max-w-[650px]">
       <SVGContainer>
-        <LensShape />
+          <LensShape />
           <RayLine />
       </SVGContainer>
-      <ConfigurationListPanel class="md:mx-8 mx-4" />
+      <ConfigurationListPanel />
     </main>
-    <aside class="md:basis-1/3 md:flex flex-grow">
-      <ControlPanel class="md:mx-8 mx-4" />
+    <aside class="md:basis-1/3 md:flex flex-grow mx-4">
+      <ControlPanel />
     </aside>
   </div>
   

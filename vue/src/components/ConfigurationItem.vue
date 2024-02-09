@@ -1,5 +1,5 @@
 <template>
-  <div class="gap-x-4 gap-y-2 grid w-full grid-cols-2">
+  <div class="gap-x-4 gap-y-2 lg:grid-cols-2 lg:grid w-full">
     <p>
       <span><b>Front radius:</b> {{ frontRadius }}mm</span>
       <LensSurfaceIndicator class="ml-2" :surface-type="frontSurface" />
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { Configuration } from '@/services/ConfigurationService'
+  import type { Configuration } from '@/types/configuration.type'
   import LensSurfaceIndicator from './LensSurfaceIndicator.vue'
 
   defineProps<Configuration>()
