@@ -5,7 +5,7 @@
     :path="rayPath"
     fill="none"
     stroke="red"
-    :stroke-width="`${2 / scale}`"
+    stroke-width="3"
   />
   <PathElement
     id="guideline"
@@ -13,7 +13,7 @@
     :path="normalPath"
     fill="none"
     stroke="green"
-    stroke-width="2"
+    stroke-width="3"
   />
 </template>
 

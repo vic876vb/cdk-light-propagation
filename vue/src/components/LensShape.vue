@@ -4,7 +4,7 @@
     title="Lens"
     :path="path"
     stroke="#7393B3"
-    stroke-width="2"
+    stroke-width="4"
     fill="none"
   />
 </template>

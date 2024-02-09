@@ -3,7 +3,7 @@ import { computed, ref } from "vue"
 import { type Configuration, type LensSurfaceType } from "@/types/configuration.type"
 import FocalLengthHelper from '@/helpers/focal-length.helper'
 
-export type ControlsState = Configuration & {
+type ControlsState = Configuration & {
   height?: number,
   offsetX?: number,
   offsetY?: number,
@@ -14,8 +14,6 @@ export type ControlsState = Configuration & {
 const useControlsStore = defineStore('controls', () => {
   const configurations = ref<Configuration[]>()
   const currentConfigurationForControls = ref<ControlsState>()
-  const fillColor = ref<string>()
-  const strokeColor = ref<string>()
   const thickness = ref<number>()
   const height = ref<number>()
   const offsetX = ref<number>()
@@ -38,8 +36,6 @@ const useControlsStore = defineStore('controls', () => {
   $reset()
 
   function $reset() {
-    fillColor.value = "none"
-    strokeColor.value = "#7393B3"
     thickness.value = 10
     height.value = 200
     offsetX.value = 150
@@ -56,8 +52,6 @@ const useControlsStore = defineStore('controls', () => {
   return {
     configurations,
     currentConfigurationForControls,
-    fillColor,
-    strokeColor,
     thickness,
     height,
     offsetX,

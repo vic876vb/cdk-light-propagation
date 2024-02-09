@@ -7,7 +7,7 @@
 <script setup lang="ts">
   import type { LensSurfaceType } from '@/types/configuration.type'
 
-  type LensSurfaceIndicatorProps ={
+  type LensSurfaceIndicatorProps = {
     surfaceType?: LensSurfaceType
   }
 
