@@ -16,14 +16,12 @@ const dynamo = DynamoDBDocumentClient.from(client)
 const tableName = process.env.TABLE_NAME || ""
 
 export async function handler(event: APIGatewayProxyEventV2, context: Context) {
-  console.log("request:", JSON.stringify(event, undefined, 2))
-
   const result: APIGatewayProxyResult = {
     statusCode: 200,
     headers: {
       "Content-Type": "application/json",
     },
-    body: ''
+    body: ""
   }
 
   let responseBody: unknown
@@ -52,26 +50,30 @@ export async function handler(event: APIGatewayProxyEventV2, context: Context) {
       case "PUT /configurations": {
         const requestBody = JSON.parse(event.body ?? "{}")
         const itemId = uuid()
+        const item = {
+          id: itemId,
+          thickness: requestBody.thickness,
+          frontRadius: requestBody.frontRadius,
+          backRadius: requestBody.backRadius,
+          frontSurface: requestBody.frontSurface,
+          backSurface: requestBody.backSurface,
+          refractionIndex: requestBody.refractionIndex,
+        }
         const output = await dynamo.send(
           new PutCommand({
             TableName: tableName,
-            Item: {
-              id: itemId,
-              fillColor: requestBody.fillColor,
-              strokeColor: requestBody.strokeColor,
-              width: requestBody.width,
-              frontRadius: requestBody.frontRadius,
-              backRadius: requestBody.backRadius,
-              refractionIndex: requestBody.refractionIndex,
-            },
+            Item: item,
           })
         )
-        responseBody = `Put item with id: ${itemId}`
+        responseBody = {
+          message: `Put item ${itemId}`,
+          data: item
+        }
         result.statusCode = 201
         break
       }
       case "DELETE /configurations/{id}": {
-        await dynamo.send(
+        const output = await dynamo.send(
           new DeleteCommand({
             TableName: tableName,
             Key: {
@@ -79,7 +81,10 @@ export async function handler(event: APIGatewayProxyEventV2, context: Context) {
             },
           })
         )
-        responseBody = `Deleted item ${event.pathParameters?.id}`
+        responseBody = {
+          message: `Deleted item ${event.pathParameters?.id}`,
+          data: event.pathParameters?.id
+        }
         break
       }
       default:
