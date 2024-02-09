@@ -8,7 +8,9 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "postinstall": "(cd lambdas && npm install) && (cd vue && npm install)",
+    "start-app": "cd vue && npm run dev"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",
