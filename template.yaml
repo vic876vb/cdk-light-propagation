@@ -4,7 +4,7 @@ Resources:
     Properties:
       AttributeDefinitions:
         - AttributeName: id
-          AttributeType: "N"
+          AttributeType: S
       KeySchema:
         - AttributeName: id
           KeyType: HASH
@@ -70,7 +70,7 @@ Resources:
       Code:
         S3Bucket:
           Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
-        S3Key: ef7a2b41b3152d5f72b4124e0b681f05cbaa1646ef1cc5e859bb730d6429425e.zip
+        S3Key: bdc648ca5868f406e687c5c07a5877c55228667c3d08a1dec3a2afe36f94e631.zip
       Environment:
         Variables:
           PRIMARY_KEY: id
@@ -88,7 +88,7 @@ Resources:
       - CdkLightPropagationMainHandlerFunctionServiceRole29988F48
     Metadata:
       aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationMainHandlerFunction/Resource
-      aws:asset:path: /Users/vic876vb/dev/git/cdk-light-propagation/cdk.out/asset.ef7a2b41b3152d5f72b4124e0b681f05cbaa1646ef1cc5e859bb730d6429425e
+      aws:asset:path: /Users/vic876vb/dev/git/cdk-light-propagation/cdk.out/asset.bdc648ca5868f406e687c5c07a5877c55228667c3d08a1dec3a2afe36f94e631
       aws:asset:is-bundled: true
       aws:asset:property: Code
   CdkLightPropagationConfigurationsApiCF275361:
@@ -100,7 +100,7 @@ Resources:
           - "*"
         AllowMethods:
           - GET
-          - POST
+          - PUT
           - DELETE
         AllowOrigins:
           - "*"
@@ -171,7 +171,7 @@ Resources:
             - Ref: CdkLightPropagationConfigurationsApiGETconfigurationsCdkLightPropagationMainIntegrationDA0C61E0
     Metadata:
       aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/GET--configurations/Resource
-  CdkLightPropagationConfigurationsApiPOSTconfigurationsCdkLightPropagationMainIntegrationPermissionA075B978:
+  CdkLightPropagationConfigurationsApiPUTconfigurationsCdkLightPropagationMainIntegrationPermission627545D4:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
@@ -193,21 +193,21 @@ Resources:
             - Ref: CdkLightPropagationConfigurationsApiCF275361
             - /*/*/configurations
     Metadata:
-      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/POST--configurations/CdkLightPropagationMainIntegration-Permission
-  CdkLightPropagationConfigurationsApiPOSTconfigurations9338CE3D:
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/PUT--configurations/CdkLightPropagationMainIntegration-Permission
+  CdkLightPropagationConfigurationsApiPUTconfigurations7ECB376E:
     Type: AWS::ApiGatewayV2::Route
     Properties:
       ApiId:
         Ref: CdkLightPropagationConfigurationsApiCF275361
       AuthorizationType: NONE
-      RouteKey: POST /configurations
+      RouteKey: PUT /configurations
       Target:
         Fn::Join:
           - ""
           - - integrations/
             - Ref: CdkLightPropagationConfigurationsApiGETconfigurationsCdkLightPropagationMainIntegrationDA0C61E0
     Metadata:
-      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/POST--configurations/Resource
+      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/PUT--configurations/Resource
   CdkLightPropagationConfigurationsApiGETconfigurationsidCdkLightPropagationMainIntegrationPermission90526079:
     Type: AWS::Lambda::Permission
     Properties:
@@ -245,43 +245,6 @@ Resources:
             - Ref: CdkLightPropagationConfigurationsApiGETconfigurationsCdkLightPropagationMainIntegrationDA0C61E0
     Metadata:
       aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/GET--configurations--{id}/Resource
-  CdkLightPropagationConfigurationsApiPUTconfigurationsidCdkLightPropagationMainIntegrationPermission34315503:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
-        Fn::GetAtt:
-          - CdkLightPropagationMainHandlerFunctionE2F03E9F
-          - Arn
-      Principal: apigateway.amazonaws.com
-      SourceArn:
-        Fn::Join:
-          - ""
-          - - "arn:"
-            - Ref: AWS::Partition
-            - ":execute-api:"
-            - Ref: AWS::Region
-            - ":"
-            - Ref: AWS::AccountId
-            - ":"
-            - Ref: CdkLightPropagationConfigurationsApiCF275361
-            - /*/*/configurations/{id}
-    Metadata:
-      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/PUT--configurations--{id}/CdkLightPropagationMainIntegration-Permission
-  CdkLightPropagationConfigurationsApiPUTconfigurationsidB900E2BF:
-    Type: AWS::ApiGatewayV2::Route
-    Properties:
-      ApiId:
-        Ref: CdkLightPropagationConfigurationsApiCF275361
-      AuthorizationType: NONE
-      RouteKey: PUT /configurations/{id}
-      Target:
-        Fn::Join:
-          - ""
-          - - integrations/
-            - Ref: CdkLightPropagationConfigurationsApiGETconfigurationsCdkLightPropagationMainIntegrationDA0C61E0
-    Metadata:
-      aws:cdk:path: CdkLightPropagationStack/CdkLightPropagationConfigurationsApi/PUT--configurations--{id}/Resource
   CdkLightPropagationConfigurationsApiDELETEconfigurationsidCdkLightPropagationMainIntegrationPermission4A9D0147:
     Type: AWS::Lambda::Permission
     Properties:
@@ -322,10 +285,17 @@ Resources:
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Analytics: v2:deflate64:H4sIAAAAAAAA/11Qy07DMBD8Fu7OQlIOXNtKqFwQCtyjjb1Em4cdZZ1WUZR/x3YoB04zs54ZrbeAvHiGpwe8SaZNl/Vcw/rpUXcqjKrVLBYHZ8LwC+ue1PnbJrKpHofaYGWdoVbgPcHrbLVnZxXjAGvp9kDCD9ezXqLc2abkUKEIeYFjhKDhNOuO/AmFfuthDYG/1himaWCRoDaFIzfo6YbLtYD14v14HDmaIkQZ/tGkDXYSR6Wb/c7erKdmwnvxP5l826ZKEjdPmlTaMfawbZLh/hD42VnDPu0UzwGtPF7zF8gP4bCtMGfTbD0PBOWOP2hF/B91AQAA
+      Analytics: v2:deflate64:H4sIAAAAAAAA/11Qy07EMAz8Fu6poV0OXHdXQnABVLhXbhMq95FUtbOrquq/k6QsB04zY41HYxeQF4/wcIdXzhrdZwPVsH4KNr0Ko2rVi8XR6TD8wnow6vxtE9nUgGOtsbJOm47hLcGzt42Qs4pwhLV0+0LCDzdQs0S5s03xoUJmIwzHCEHDyTe9kROy+Y2HNSz8pcZlM4/EHNSmcKIWxVxxuRSwvohMx4miKUKU4Y42NdhJHJXOy85erZh2xlvwP5l826ZKw87PjVGpY8wh20bDu5fJS7LeLIGfndUkqV18DHR8f8mfID+EF3dMlM3eCo0Gyh1/AF0bTNt/AQAA
     Metadata:
       aws:cdk:path: CdkLightPropagationStack/CDKMetadata/Default
     Condition: CDKMetadataAvailable
+Outputs:
+  ApiEndpoint:
+    Description: API Endpoint
+    Value:
+      Fn::GetAtt:
+        - CdkLightPropagationConfigurationsApiCF275361
+        - ApiEndpoint
 Conditions:
   CDKMetadataAvailable:
     Fn::Or:
