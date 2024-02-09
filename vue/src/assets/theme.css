@@ -32,6 +32,9 @@
   --color-text: var(--vt-c-text-light-1);
   /* --section-gap: 160px; */
 
+
+  /** Custom theme colors from personal website https://www.vic876vb.dev */
+
   /** primary **/
   --color-primary: #6950ff;
   --color-primary-rgb: 105, 80, 255;
