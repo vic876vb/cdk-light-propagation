@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-xl" v-if="!!configurations?.length">
+  <template v-if="!!configurations?.length">
     <fwb-list-group class="w-full">
       <fwb-list-group-item
         :key="config.id"
@@ -18,11 +18,14 @@
         </template>
       </fwb-list-group-item>
     </fwb-list-group>
-  </div>
+  </template>
+  <template v-else>
+    <div class="dark:text-gray-300 p-4 text-center text-gray-500">No Configurations Yet.</div>
+  </template>
 </template>
 
 <script setup lang="ts">
-  import { onMounted, onUnmounted, watchEffect } from 'vue'
+  import { onUnmounted, watchEffect } from 'vue'
   import { FwbListGroup, FwbListGroupItem } from 'flowbite-vue'
   import ConfigurationItem from '@/components/ConfigurationItem.vue'
   import useControlsStore from '@/stores/controls.store'
@@ -60,4 +63,3 @@
       })
   }
 </script>
-@/stores/controls.store
